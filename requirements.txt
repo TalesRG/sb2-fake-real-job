@@ -1,0 +1,5 @@
+
+findspark
+pyspark-stubs
+plotly
+pandas

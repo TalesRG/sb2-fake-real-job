@@ -1,24 +1,18 @@
-create table silver_jobs
-(
-    job_id                         integer,
-    job_title                      text,
-    company_name                   text,
-    location                       text,
-    industry                       text,
-    employment_type                text,
-    required_experience_years      integer,
-    telecommuting                  boolean,
-    has_logo                       boolean,
-    is_fake                        boolean,
-    posting_timestamp              timestamp,
-    application_deadline_timestamp timestamp,
-    salary_range                   text,
-    salary_clean                   text,
-    salary_min                     integer,
-    salary_max                     integer,
-    salary_avg                     integer
+CREATE TABLE silver_jobs (
+    job_id                         INTEGER      NOT NULL,
+    job_title                      TEXT         NOT NULL,
+    company_name                   TEXT,
+    location                       TEXT,
+    industry                       TEXT,
+    required_experience_years      INTEGER,
+    is_fake                        BOOLEAN       NOT NULL,
+    posting_timestamp              TIMESTAMP,
+    application_deadline_timestamp TIMESTAMP,
+    salary_range                   TEXT,
+    salary_clean                   TEXT,
+    salary_min                     INTEGER,
+    salary_max                     INTEGER,
+    salary_avg                     INTEGER,
+
+    CONSTRAINT pk_silver_jobs PRIMARY KEY (job_id)
 );
-
-alter table silver_jobs
-    owner to postgres;
-
