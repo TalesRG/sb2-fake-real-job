@@ -8,50 +8,43 @@ Este documento define todas as abreviações e convenções de nomenclatura util
 
 | Abreviação | Significado | Tabela Completa |
 |------------|-------------|-----------------|
-| `cmp` | **C**o**mp**any (Empresa) | `dim_company` |
-| `job` | **Job** Title (Cargo) | `dim_job_title` |
-| `loc` | **Loc**ation (Localização) | `dim_location` |
-| `frd` | **Fr**au**d** (Motivo de fraude) | `dim_fraud_reason` |
-| `pst` | **P**o**st**ing (Publicação de vaga) | `fact_job_posting` |
+| `cmp`      | **C**o**mp**any (Empresa) | `dim_cmp`       |
+| `jtl`      | **Job** Title (Cargo) | `dim_jtl`       |
+| `loc`      | **Loc**ation (Localização) | `dim_loc`       |
+| `frd`      | **Fr**au**d** (Motivo de fraude) | `dim_frd`       |
+| `jpt`      | **P**o**st**ing (Publicação de vaga) | `fact_jpt`      |
 
 ---
 
 ## 2. Prefixos de Tabelas
 
-| Prefixo | Significado | Exemplo |
-|--------|-------------|--------|
-| `dim_` | **Dim**ensão (tabela dimensional) | `dim_company`, `dim_job_title` |
-| `fact_` | **Fact** (tabela fato) | `fact_job_posting` |
-| `vw_` | **V**ie**w** (visão analítica) | `vw_salary_by_location` |
-| `idx_` | **Idx** (índice) | `idx_fact_company` |
+| Prefixo | Significado | Exemplo                                    |
+|---------|-------------|--------------------------------------------|
+| `dim_`  | **Dim**ensão (tabela dimensional) | `dim_cmp`, `dim_jtl` , `dim_loc`,`dim_frd` |
+| `fact_` | **Fact** (tabela fato) | `fact_jpt`                                 |
 
 ---
 
 ## 3. Sufixos de Chaves
 
-| Sufixo | Significado | Uso |
-|-------|------------|-----|
-| `_sk` | **S**urrogate **K**ey – Chave primária artificial | Usado nas tabelas de dimensão |
-| `_srk` | **S**urrogate **R**eference **K**ey | Usado na tabela fato como FK |
+| Sufixo | Significado | Uso           |
+|--------|------------|---------------|
+| `_srk` | **S**urrogate **R**eference **K**ey | Usado como PK |
 
 ### Exemplos
 
-- `company_sk` – Chave primária da dimensão `dim_company`
-- `company_srk` – Chave estrangeira na `fact_job_posting` que referencia `dim_company(company_sk)`
+- `cmp_sk` – Chave primária da dimensão `dim_cmp`
+- `cmp_srk` – Chave estrangeira na `fact_jpt` que referencia `dim_cmp(cmp_srk)`
 
 
 ## 4. Abreviações de Colunas
 
-| Abreviação | Significado | Uso |
-|-----------|------------|-----|
-| `dt` | Data | Campos temporais |
-| `nr` | Número | Identificadores |
-| `vlr` | Valor | Valores monetários |
-| `avg` | Average (Média) | `salary_avg` |
-| `min` | Minimum | `salary_min` |
-| `max` | Maximum | `salary_max` |
-| `eh` | Verbo ser | Booleanos em PT |
-| `is` | Booleano | Booleanos em EN |
+| Abreviação | Significado     | Uso                |
+|------------|-----------------|--------------------|
+| `avg`      | Average (Média) | `salary_avg`       |
+| `is`       | Booleano        | Booleanos em EN    |
+| `rmt`      | Booleano        | Booleanos em EN    |
+| `etl_ct`   | Data            | Campos temporais   |
 
 ---
 
@@ -59,60 +52,60 @@ Este documento define todas as abreviações e convenções de nomenclatura util
 
 ### 5.1 Dimensão Empresa (`dim_company`)
 
-| Coluna | Tipo | Descrição |
-|------|-----|-----------|
-| `company_sk` | BIGSERIAL | Chave primária surrogate |
-| `company_name` | TEXT | Nome da empresa contratante |
+| Coluna    | Tipo | Descrição |
+|-----------|-----|-----------|
+| `cmp_srk` | BIGSERIAL | Chave primária surrogate |
+| `cmp_nam` | TEXT | Nome da empresa contratante |
 
 ---
 
 ### 5.2 Dimensão Cargo (`dim_job_title`)
 
-| Coluna | Tipo | Descrição |
-|------|-----|-----------|
-| `job_title_sk` | BIGSERIAL | Chave primária surrogate |
-| `job_title` | TEXT | Título do cargo |
+| Coluna    | Tipo | Descrição |
+|-----------|-----|-----------|
+| `jtl_srk` | BIGSERIAL | Chave primária surrogate |
+| `jtl`     | TEXT | Título do cargo |
 
 ---
 
 ### 5.3 Dimensão Localização (`dim_location`)
 
-| Coluna | Tipo | Descrição |
-|------|-----|-----------|
-| `location_sk` | BIGSERIAL | Chave primária surrogate |
-| `country` | TEXT | País da vaga |
-| `state` | TEXT | Estado ou região |
+| Coluna    | Tipo | Descrição |
+|-----------|-----|-----------|
+| `loc_srk` | BIGSERIAL | Chave primária surrogate |
+| `cty`     | TEXT | País da vaga |
+| `ste`     | TEXT | Estado ou região |
 
 ---
 
 ### 5.4 Dimensão Motivo de Fraude (`dim_fraud_reason`)
 
-| Coluna | Tipo | Descrição |
-|------|-----|-----------|
-| `fraud_reason_sk` | BIGSERIAL | Chave primária surrogate |
-| `fraud_reason` | TEXT | Motivo associado à fraude |
+| Coluna    | Tipo | Descrição |
+|-----------|-----|-----------|
+| `frd_srk` | BIGSERIAL | Chave primária surrogate |
+| `frd`     | TEXT | Motivo associado à fraude |
 
 ---
 
 ### 5.5 Fato Publicação de Vagas (`fact_job_posting`)
-| Coluna             | Tipo      | Descrição                                |
-| ------------------ | --------- |------------------------------------------|
-| `job_id`           | BIGINT    | Identificador natural da vaga            |
-| `company_srk`      | BIGINT    | FK → `dim_company(company_sk)`           |
-| `job_title_srk`    | BIGINT    | FK → `dim_job_title(job_title_sk)`       |
-| `location_srk`     | BIGINT    | FK → `dim_location(location_sk)`         |
-| `fraud_reason_srk` | BIGINT    | FK → `dim_fraud_reason(fraud_reason_sk)` |
-| `salary_avg`       | NUMERIC   | Salário médio                            |
-| `remote`           | BOOLEAN   | Vaga remota                              |
-| `is_fake`          | BOOLEAN   | Indicador de fraude                      |
-| `etl_loaded_at`    | TIMESTAMP | Data da carga                            |
+| Coluna    | Tipo      | Descrição                                |
+|-----------| --------- |------------------------------------------|
+| `job_id`  | BIGINT    | Identificador natural da vaga            |
+| `cmp_srk` | BIGINT    | FK → `dim_company(company_sk)`           |
+| `jtl_srk` | BIGINT    | FK → `dim_job_title(job_title_sk)`       |
+| `loc_srk` | BIGINT    | FK → `dim_location(location_sk)`         |
+| `frd_srk` | BIGINT    | FK → `dim_fraud_reason(fraud_reason_sk)` |
+| `avg`     | NUMERIC   | Salário médio                            |
+| `rmt`     | BOOLEAN   | Vaga remota                              |
+| `is_fake` | BOOLEAN   | Indicador de fraude                      |
+| `etl_ct`  | TIMESTAMP | Data da carga                            |
 
 ---
 
 ## 7. Convenções Gerais
 
 1. snake_case
-2. Dimensões usam _sk
+2. Dimensões usam _srk
 3. Fato usa _srk
 4. Star Schema
 
@@ -122,32 +115,33 @@ Este documento define todas as abreviações e convenções de nomenclatura util
 
 ```
                         +------------------------+
-                        |      dim_company       |
+                        |      dim_cmp           |
                         +------------------------+
-                        | company_sk (PK)       |
-                        | company_name           |
+                        | cmp_srk (PK)           |
+                        | cpm_nam                |
                         +-----------+------------+
                                     |
-                                    | company_srk
+                                    | cmp_srk (FK)
                                     v
 +------------------------+   +-----------------------------+   +------------------------+
-|    dim_job_title       |   |     fact_job_posting        |   |     dim_location       |
+|    dim_jtl             |   |     fact_jpt                |   |     dim_loc            |
 +------------------------+   +-----------------------------+   +------------------------+
-| job_title_sk (PK)     |<--| job_title_srk (FK)          |   | location_sk (PK)      |
-| job_title              |   | company_srk (FK)            |-->| country                |
-+------------------------+   | location_srk (FK)           |   | state                  |
-                             | fraud_reason_srk (FK)       |   +------------------------+
-                             | salary_avg                  |
-                             | remote                      |
+| jtl_srk (PK)           |<--| jtl_srk (FK)                |   | loc_srk (PK)           |
+| jtl                    |   | cmp_srk (FK)                |-->| cty                    |
++------------------------+   | loc_srk (FK)                |   | ste                    |
+                             | frd_srk (FK)                |   +------------------------+
+                             | avg                         |
+                             | rmt                         |
                              | is_fake                     |
+                             | etl_ct                      |
                              +-------------+---------------+
                                            |
                                            v
                              +-------------------------------+
-                             |     dim_fraud_reason          |
+                             |     dim_frd                   |
                              +-------------------------------+
-                             | fraud_reason_sk (PK)         |
-                             | fraud_reason                  |
+                             | frd_srk (PK)                  |
+                             | frd                           |
                              +-------------------------------+
     
 

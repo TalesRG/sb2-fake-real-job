@@ -1,32 +1,35 @@
 create schema if not exists gold;
-create table gold.dim_company (
-                                       company_sk bigserial primary key,
-                                       company_name text not null unique
-                                     );
-create table gold.dim_job_title (
-                                       job_title_sk bigserial primary key,
-                                       job_title text not null unique
-                                     );
-create table gold.dim_location (
-                                       location_sk bigserial primary key,
-                                       country text,
-                                       state text,
-                                       unique (country, state)
-                                     );
-create table gold.dim_fraud_reason (
-                                       fraud_reason_sk bigserial primary key,
-                                       fraud_reason text not null unique
-                                     );
-CREATE TABLE gold.fact_job_posting (
-    job_id BIGINT PRIMARY KEY,
+create table gold.dim_cmp (
+                                  cmp_srk bigserial primary key,
+                                  cmp_nam text not null unique
+);
+create table gold.dim_jtl (
+                                    jtl_srk bigserial primary key,
+                                    jtl text not null unique
+);
+create table gold.dim_loc (
+                                   loc_srk bigserial primary key,
+                                   cty text,
+                                   ste text,
+                                   unique (cty, ste)
+);
+create table gold.dim_frd (
+                                       frd_srk bigserial primary key,
+                                       frd text not null unique
+);
+CREATE TABLE gold.fact_jpt
+(
+    job_id  BIGINT PRIMARY KEY,
 
-    company_srk BIGINT REFERENCES gold.dim_company(company_sk),
-    job_title_srk BIGINT REFERENCES gold.dim_job_title(job_title_sk),
-    location_srk BIGINT REFERENCES gold.dim_location(location_sk),
-    fraud_reason_srk BIGINT REFERENCES gold.dim_fraud_reason(fraud_reason_sk),
+    cmp_srk BIGINT REFERENCES gold.dim_cmp (cmp_srk),
+    jtl_srk BIGINT REFERENCES gold.dim_jtl (jtl_srk),
+    loc_srk BIGINT REFERENCES gold.dim_loc (loc_srk),
+    frd_srk BIGINT REFERENCES gold.dim_frd (frd_srk),
 
-    salary_avg NUMERIC,
-    remote BOOLEAN,
+    avg     NUMERIC,
+    rmt     BOOLEAN,
     is_fake BOOLEAN,
 
-    etl_loaded_at TIMESTAMP NOT NULL DEFAULT now()
+    etl_ct  TIMESTAMP NOT NULL DEFAULT now()
+)
+
