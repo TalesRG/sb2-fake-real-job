@@ -1,6 +1,6 @@
 # Dicionário de Mnemônicos – Gold Layer
 
-Este documento define todas as abreviações e convenções de nomenclatura utilizadas no **Star Schema da camada Gold** do projeto **Fake–Real Job ETL**.
+Este documento define todas as abreviações e convenções de nomenclatura utilizadas no **Star Schema da camada Gold** do projeto **Fake–Real-Job**.
 
 ---
 
@@ -30,14 +30,14 @@ Este documento define todas as abreviações e convenções de nomenclatura util
 ## 3. Sufixos de Chaves
 
 | Sufixo | Significado | Uso |
-|--------|------------|-----|
-| `_key` | **Key** – Chave primária surrogate | Usado nas tabelas de dimensão |
+|-------|------------|-----|
+| `_sk` | **S**urrogate **K**ey – Chave primária artificial | Usado nas tabelas de dimensão |
 | `_srk` | **S**urrogate **R**eference **K**ey | Usado na tabela fato como FK |
 
 ### Exemplos
 
-- `company_key` – Chave primária da dimensão `dim_company`
-- `company_srk` – Chave estrangeira na `fact_job_posting` que referencia `dim_company(company_key)`
+- `company_sk` – Chave primária da dimensão `dim_company`
+- `company_srk` – Chave estrangeira na `fact_job_posting` que referencia `dim_company(company_sk)`
 
 
 ## 4. Abreviações de Colunas
@@ -95,29 +95,26 @@ Este documento define todas as abreviações e convenções de nomenclatura util
 ---
 
 ### 5.5 Fato Publicação de Vagas (`fact_job_posting`)
-| Coluna             | Tipo      | Descrição                                 |
-| ------------------ | --------- | ----------------------------------------- |
-| `job_id`           | BIGINT    | Identificador natural da vaga             |
-| `company_srk`      | BIGINT    | FK → `dim_company(company_key)`           |
-| `job_title_srk`    | BIGINT    | FK → `dim_job_title(job_title_key)`       |
-| `location_srk`     | BIGINT    | FK → `dim_location(location_key)`         |
-| `fraud_reason_srk` | BIGINT    | FK → `dim_fraud_reason(fraud_reason_key)` |
-| `salary_avg`       | NUMERIC   | Salário médio                             |
-| `remote`           | BOOLEAN   | Vaga remota                               |
-| `is_fake`          | BOOLEAN   | Indicador de fraude                       |
-| `etl_loaded_at`    | TIMESTAMP | Data da carga                             |
+| Coluna             | Tipo      | Descrição                                |
+| ------------------ | --------- |------------------------------------------|
+| `job_id`           | BIGINT    | Identificador natural da vaga            |
+| `company_srk`      | BIGINT    | FK → `dim_company(company_sk)`           |
+| `job_title_srk`    | BIGINT    | FK → `dim_job_title(job_title_sk)`       |
+| `location_srk`     | BIGINT    | FK → `dim_location(location_sk)`         |
+| `fraud_reason_srk` | BIGINT    | FK → `dim_fraud_reason(fraud_reason_sk)` |
+| `salary_avg`       | NUMERIC   | Salário médio                            |
+| `remote`           | BOOLEAN   | Vaga remota                              |
+| `is_fake`          | BOOLEAN   | Indicador de fraude                      |
+| `etl_loaded_at`    | TIMESTAMP | Data da carga                            |
 
 ---
 
 ## 7. Convenções Gerais
 
 1. snake_case
-2. Dimensões usam _key
+2. Dimensões usam _sk
 3. Fato usa _srk
-4. Star Schema puro
-5. Sem redundância analítica
-6. Apenas atributos usados em análise
-7. Modelo alinhado ao ETL implementado
+4. Star Schema
 
 ---
 
@@ -127,7 +124,7 @@ Este documento define todas as abreviações e convenções de nomenclatura util
                         +------------------------+
                         |      dim_company       |
                         +------------------------+
-                        | company_key (PK)       |
+                        | company_sk (PK)       |
                         | company_name           |
                         +-----------+------------+
                                     |
@@ -136,7 +133,7 @@ Este documento define todas as abreviações e convenções de nomenclatura util
 +------------------------+   +-----------------------------+   +------------------------+
 |    dim_job_title       |   |     fact_job_posting        |   |     dim_location       |
 +------------------------+   +-----------------------------+   +------------------------+
-| job_title_key (PK)     |<--| job_title_srk (FK)          |   | location_key (PK)      |
+| job_title_sk (PK)     |<--| job_title_srk (FK)          |   | location_sk (PK)      |
 | job_title              |   | company_srk (FK)            |-->| country                |
 +------------------------+   | location_srk (FK)           |   | state                  |
                              | fraud_reason_srk (FK)       |   +------------------------+
@@ -149,7 +146,7 @@ Este documento define todas as abreviações e convenções de nomenclatura util
                              +-------------------------------+
                              |     dim_fraud_reason          |
                              +-------------------------------+
-                             | fraud_reason_key (PK)         |
+                             | fraud_reason_sk (PK)         |
                              | fraud_reason                  |
                              +-------------------------------+
     
